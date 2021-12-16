@@ -44,6 +44,39 @@ return [
 ```
 ## 快速开始
 
+### 事件监听
+
+监听类 `LoggerListener.php`
+
+```php
+namespace extend\event\listener;
+
+use Symfony\Contracts\EventDispatcher\Event;
+
+class LoggerListener extends Event
+{
+    const NAME = 'sys:logger';
+
+    public function handle($event)
+    {
+        // 事件监听处理
+        var_dump('LoggerListener 事件监听处理');
+    }
+}
+```
+
+监听配置
+```php
+return [
+    // 事件监听
+    'listener'    => [
+        \extend\event\listener\LoggerListener::NAME  => \extend\event\listener\LoggerListener::class,
+    ],
+];
+```
+### 事件订阅
+
+待完善
 ### 触发器
 ```php
 EventManager::trigger(new LoggerListener());
