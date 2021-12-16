@@ -70,6 +70,8 @@ class LoggerListener extends Event
 return [
     // 事件监听
     'listener'    => [
+        'sys:logger'  => \extend\event\listener\LoggerListener::class,
+        // 或者
         \extend\event\listener\LoggerListener::NAME  => \extend\event\listener\LoggerListener::class,
     ],
 ];
@@ -77,7 +79,10 @@ return [
 ### 事件订阅
 
 待完善
-### 触发器
+### 事件触发器
+
+
+触发LoggerListener事件 用于执行日志记录操作
 ```php
 EventManager::trigger(new LoggerListener());
 ```
