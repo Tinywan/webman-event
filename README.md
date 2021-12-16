@@ -72,7 +72,7 @@ return [
     'listener'    => [
         'sys:logger'  => \extend\event\listener\LoggerListener::class,
         // 或者
-        \extend\event\listener\LoggerListener::NAME  => \extend\event\listener\LoggerListener::class,
+        // \extend\event\listener\LoggerListener::NAME  => \extend\event\listener\LoggerListener::class,
     ],
 ];
 ```
