@@ -67,12 +67,12 @@ class LogErrorEvent extends Event
 
     public function handle()
     {
-        return 'Error：错误日志处理, '.$this->message."\n";
+        return '<<>>Error：'.$this->message."\n";
     }
 }
 ```
 
-监听配置
+事件监听
 ```php
 return [
     // 事件监听
@@ -84,15 +84,59 @@ return [
 
 ### 事件订阅
 
-待完善
+订阅类 `LoggerSubscriber.php`
+
+```php
+use extend\event\LogErrorEvent;
+use extend\event\LogWarningEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class LoggerSubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents()
+    {
+        return [
+            LogErrorEvent::NAME => 'onLogErrorHandle',
+            LogWarningEvent::NAME => 'onLogWarningHandle',
+        ];
+    }
+
+    public function onLogErrorHandle(LogErrorEvent $event)
+    {
+        echo ' [x] 【日志错误事件】，处理结果：' . $event->handle(), "\n";
+    }
+
+    public function onLogWarningHandle(LogWarningEvent $event)
+    {
+        echo ' [x] 【日志警告事件】，处理结果：' . $event->handle(), "\n";
+    }
+}
+```
+
+事件订阅
+```php
+return [
+    // 事件订阅
+    'subscriber' => [
+        \extend\event\subscriber\LoggerSubscriber::class,
+    ],
+];
+```
 
 ### 事件触发器
 
 触发 `LogErrorEvent` 事件。
 
 ```php
-EventManager::trigger(new LogErrorEvent('【事件】错误日志'),LogErrorEvent::NAME);
+EventManager::trigger(new LogErrorEvent('这是一条系统错误日志'),LogErrorEvent::NAME);
+
+EventManager::trigger(new LogWarningEvent('这是一条支付警告日志'),LogWarningEvent::NAME);
 ```
+
+执行结果
+
+![打印结果](./trigger.png)
+
 ## License
 
 This project is licensed under the [Apache 2.0 license](LICENSE).
