@@ -41,13 +41,13 @@ class EventManager implements Bootstrap
         if ($worker) {
             if (is_null(static::$instance)) {
                 static::$instance = Container::get(EventDispatcher::class);
-                $listeners = config('event.listener');
-                if ($listeners) {
-                    foreach ($listeners as $eventName => $listener) {
-                        $instance = new $listener;
-                        if (method_exists($instance,'handle')) {
+                $event = config('event');
+                if (isset($event['listener']) && !empty($event['listener'])) {
+                    foreach ($event['listener'] as $eventName => $listener) {
+                        if (false === static::$instance->hasListeners($eventName)) {
                             static::$instance->addListener($eventName, function (Event $event, $eventName, $dispatcher){
-                                if (false === $event->handle($dispatcher)) {
+                                // trigger 触发事件 do somthing
+                                if (false === $event->handle()) {
                                     $event->stopPropagation();
                                 }
                             });
@@ -55,12 +55,11 @@ class EventManager implements Bootstrap
                     }
                 }
 
-               $subscribers = config('event.subscriber');
-               if ($subscribers) {
-                   foreach ($subscribers as $subscriber) {
-                       static::$instance->addSubscriber(Container::get($subscriber));
-                   }
-               }
+                if (isset($event['subscriber']) && !empty($event['subscriber'])) {
+                    foreach ($event['subscriber'] as $subscriber) {
+                        static::$instance->addSubscriber(Container::get($subscriber));
+                    }
+                }
             }
         }
     }
@@ -68,19 +67,12 @@ class EventManager implements Bootstrap
     /**
      * 触发事件
      * @param Event $event
+     * @param string $eventName
      * @param null $params
      */
-    public static function trigger(Event $event, $params = null)
+    public static function trigger(Event $event, string $eventName = null, $params = null)
     {
-        $listeners = config('event.listener');
-        $eventList = array_unique($listeners,SORT_REGULAR);
-        if ($eventList) {
-            foreach ($eventList as $eventName => $_instance) {
-                if ($event instanceof $_instance) {
-                    static::$instance->dispatch(new $_instance(), $eventName);
-                }
-            }
-        }
+        static::$instance->dispatch($event,$eventName);
     }
 
     /**
