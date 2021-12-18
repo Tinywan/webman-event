@@ -46,28 +46,30 @@ return [
 
 ### 监听事件
 
-事件类 `LogErrorEvent.php`
+事件类 `LogErrorWriteEvent.php`
 
 ```php
-namespace extend\event;
+declare(strict_types=1);
 
+namespace extend\event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class LogErrorEvent extends Event
+class LogErrorWriteEvent extends Event
 {
-    const NAME = 'log.error';  // 事件名，事件的唯一标识
+    const NAME = 'log.error.write';  // 事件名，事件的唯一标识
 
-    protected $message;
+    /** @var array */
+    public array $log;
 
-    public function __construct($message)
+    public function __construct(array $log)
     {
-        $this->message = $message;
+        $this->log = $log;
     }
 
     public function handle()
     {
-        return '<<>>Error：'.$this->message."\n";
+        return $this->log;
     }
 }
 ```
@@ -77,7 +79,7 @@ class LogErrorEvent extends Event
 return [
     // 事件监听
     'listener'    => [
-        \extend\event\LogErrorEvent::NAME  => \extend\event\LogErrorEvent::class,
+        \extend\event\LogErrorWriteEvent::NAME  => \extend\event\LogErrorWriteEvent::class,
     ],
 ];
 ```
@@ -87,28 +89,32 @@ return [
 订阅类 `LoggerSubscriber.php`
 
 ```php
-use extend\event\LogErrorEvent;
-use extend\event\LogWarningEvent;
+namespace extend\event\subscriber;
+
+use extend\event\LogErrorWriteEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class LoggerSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @desc: 方法描述
+     * @return array|string[]
+     */
     public static function getSubscribedEvents()
     {
         return [
-            LogErrorEvent::NAME => 'onLogErrorHandle',
-            LogWarningEvent::NAME => 'onLogWarningHandle',
+            LogErrorWriteEvent::NAME => 'onLogErrorWrite',
         ];
     }
 
-    public function onLogErrorHandle(LogErrorEvent $event)
+    /**
+     * @desc: 触发事件
+     * @param LogErrorWriteEvent $event
+     */
+    public function onLogErrorWrite(LogErrorWriteEvent $event)
     {
-        echo ' [x] 【日志错误事件】，处理结果：' . $event->handle(), "\n";
-    }
-
-    public function onLogWarningHandle(LogWarningEvent $event)
-    {
-        echo ' [x] 【日志警告事件】，处理结果：' . $event->handle(), "\n";
+        // 一些具体的业务逻辑
+        var_dump($event->handle());
     }
 }
 ```
@@ -125,12 +131,14 @@ return [
 
 ### 事件触发器
 
-触发 `LogErrorEvent` 事件。
+触发 `LogErrorWriteEvent` 事件。
 
 ```php
-EventManager::trigger(new LogErrorEvent('这是一条系统错误日志'),LogErrorEvent::NAME);
-
-EventManager::trigger(new LogWarningEvent('这是一条支付警告日志'),LogWarningEvent::NAME);
+$error = [
+    'errorMessage' => '错误消息',
+    'errorCode' => 500
+];
+EventManager::trigger(new LogErrorWriteEvent($error),LogErrorWriteEvent::NAME);
 ```
 
 执行结果
