@@ -10,7 +10,11 @@
 
 事件相比较中间件的优势是事件比中间件更加精准定位（或者说粒度更细），并且更适合一些业务场景的扩展。例如，我们通常会遇到用户注册或者登录后需要做一系列操作，通过事件系统可以做到不侵入原有代码完成登录的操作扩展，降低系统的耦合性的同时，也降低了BUG的可能性。
 
-## Requirements
+## 项目地址
+
+[https://github.com/Tinywan/webman-permission](https://github.com/Tinywan/webman-permission)
+
+## 依赖
 
 - [symfony/event-dispatcher](https://github.com/symfony/event-dispatcher)
 
