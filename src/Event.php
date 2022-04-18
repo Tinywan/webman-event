@@ -4,15 +4,15 @@
  * @author Tinywan(ShaoBo Wan)
  * @date 2021/12/16 15:13
  */
-
 declare(strict_types=1);
 
-namespace webman\event;
+namespace Tinywan;
 
 use support\Container;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event as SymfonyEvent;
 use Webman\Bootstrap;
+use Workerman\Worker;
 
 /**
  * @see EventDispatcher
@@ -22,7 +22,7 @@ use Webman\Bootstrap;
  * @method static getListenerPriority(string $eventName, $listener)
  * @method static hasListeners(string $eventName = null) 是否存在事件监听
  */
-class EventManager implements Bootstrap
+class Event implements Bootstrap
 {
     /**
      * 事件派派遣器实例
@@ -32,20 +32,19 @@ class EventManager implements Bootstrap
 
     /**
      * @desc: 进程启动时调用
-     * @param \Workerman\Worker $worker
-     * @return mixed|void
-     * @author Tinywan(ShaoBo Wan)
+     * @param Worker $worker
+     * @return void
      */
     public static function start($worker)
     {
         if ($worker) {
             if (is_null(static::$instance)) {
                 static::$instance = Container::get(EventDispatcher::class);
-                $event = config('event');
-                if (isset($event['listener']) && !empty($event['listener'])) {
-                    foreach ($event['listener'] as $eventName => $listener) {
+                $config = config('plugin.tinywan.event.app.event');
+                if (isset($config['listener']) && !empty($config['listener'])) {
+                    foreach ($config['listener'] as $eventName => $listener) {
                         if (false === static::$instance->hasListeners($eventName)) {
-                            static::$instance->addListener($eventName, function (Event $event, $eventName, $dispatcher){
+                            static::$instance->addListener($eventName, function (SymfonyEvent $event, $eventName, $dispatcher){
                                 // trigger 触发事件 do somthing
                                 if (false === $event->handle()) {
                                     $event->stopPropagation();
@@ -55,8 +54,8 @@ class EventManager implements Bootstrap
                     }
                 }
 
-                if (isset($event['subscriber']) && !empty($event['subscriber'])) {
-                    foreach ($event['subscriber'] as $subscriber) {
+                if (isset($config['subscriber']) && !empty($config['subscriber'])) {
+                    foreach ($config['subscriber'] as $subscriber) {
                         static::$instance->addSubscriber(Container::get($subscriber));
                     }
                 }
@@ -67,10 +66,9 @@ class EventManager implements Bootstrap
     /**
      * 触发事件
      * @param Event $event
-     * @param string $eventName
-     * @param null $params
+     * @param string|null $eventName
      */
-    public static function trigger(Event $event, string $eventName = null, $params = null)
+    public static function trigger(Event $event, string $eventName = null)
     {
         static::$instance->dispatch($event,$eventName);
     }

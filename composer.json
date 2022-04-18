@@ -1,5 +1,5 @@
 {
-    "name": "tinywan/webman-event",
+    "name": "tinywan/event",
     "description": "Use event in Webman Framework, The Symfony EventDispatcher component implements library.",
     "type": "library",
     "license": "Apache-2.0",
@@ -15,8 +15,11 @@
     },
     "autoload": {
         "psr-4": {
-            "webman\\event\\": "src/"
-        }
+            "Tinywan\\": "src/"
+        },
+        "files": [
+            "src/helper.php"
+        ]
     },
     "require-dev": {
         "phpunit/phpunit": "~7.0|~8.0|~9.0",

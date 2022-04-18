@@ -13,30 +13,7 @@
 ## 安装
 
 ```shell script
-composer require tinywan/webman-event
-```
-## 配置 
-
-事件配置文件 `config/event.php` 内容如下
-
-```php
-return [
-    // 事件监听
-    'listener'    => [],
-
-    // 事件订阅器
-    'subscriber' => [],
-];
-```
-### 进程启动配置
-
-打开 `config/bootstrap.php`，加入如下配置：
-
-```php
-return [
-    // 这里省略了其它配置 ...
-    webman\event\EventManager::class,
-];
+composer require tinywan/event
 ```
 ## 快速开始
 
@@ -45,8 +22,6 @@ return [
 事件类 `LogErrorWriteEvent.php`
 
 ```php
-declare(strict_types=1);
-
 namespace extend\event;
 
 use Symfony\Contracts\EventDispatcher\Event;
