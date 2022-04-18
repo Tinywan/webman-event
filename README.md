@@ -51,6 +51,7 @@ return [
     // 事件监听
     'listener'    => [
         \extend\LogErrorWriteEvent::NAME => \extend\LogErrorWriteEvent::class,
+        \extend\DingTalkEvent::NAME => \extend\DingTalkEvent::class,
     ],
 ];
 ```
@@ -62,22 +63,26 @@ return [
 ```php
 namespace extend;
 
+
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class LoggerSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
+        // 监听的不同事件，当事件触发时，会调用 onResponse 方法
         return [
-            \extend\LogErrorWriteEvent::NAME => 'onLogErrorWrite',
+            \extend\LogErrorWriteEvent::NAME => 'onResponse',
+            \extend\DingTalkEvent::NAME => 'onResponse',
         ];
     }
 
     /**
      * @desc: 触发事件
-     * @param \extend\LogErrorWriteEvent $event
+     * @param Event $event
      */
-    public function onLogErrorWrite(\extend\LogErrorWriteEvent $event)
+    public function onResponse(Event $event)
     {
         // 一些具体的业务逻辑
         var_dump($event->handle());

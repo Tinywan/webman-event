@@ -17,8 +17,9 @@ use Workerman\Worker;
 /**
  * @see EventDispatcher
  * @mxin EventDispatcher
+ * @method static addListener(string $eventName, $listener, int $priority = 0) 添加事件
  * @method static dispatch(object $event, string $eventName = null) 执行事件调度
- * @method static getListeners(string $eventName = null) 
+ * @method static getListeners(string $eventName = null)
  * @method static getListenerPriority(string $eventName, $listener)
  * @method static hasListeners(string $eventName = null) 是否存在事件监听
  */
@@ -44,6 +45,7 @@ class Event implements Bootstrap
                 if (isset($config['listener']) && !empty($config['listener'])) {
                     foreach ($config['listener'] as $eventName => $listener) {
                         if (false === static::$instance->hasListeners($eventName)) {
+                            // 注册事件监听
                             static::$instance->addListener($eventName, function (SymfonyEvent $event, $eventName, $dispatcher){
                                 // trigger 触发事件 do somthing
                                 if (false === $event->handle()) {
