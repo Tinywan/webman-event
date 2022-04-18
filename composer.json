@@ -1,14 +1,15 @@
 {
     "name": "tinywan/event",
-    "description": "Use event in Webman Framework, The Symfony EventDispatcher component implements library.",
+    "description": "the event for webman plugin",
+    "keywords": ["event",  "webman", "plugin"],
     "type": "library",
-    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Tinywan",
             "email": "756684177@qq.com"
         }
     ],
+    "license": "Apache-2.0",
     "require": {
         "php": ">=7.2",
         "symfony/event-dispatcher": "^5.4"
@@ -27,13 +28,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "webman\\event\\tests\\": "tests"
-        }
-    },
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "https://mirrors.aliyun.com/composer//"
+            "Tinywan\\Tests\\": "tests"
         }
     }
 }
