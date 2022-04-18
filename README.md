@@ -1,12 +1,10 @@
-# webman-event
+# webman event plugin
 
-[![license](https://img.shields.io/github/license/Tinywan/webman-event)]()
-[![Build status](https://github.com/Tinywan/dnmp/workflows/CI/badge.svg)]()
-[![webman-event](https://img.shields.io/github/v/release/tinywan/webman-event?include_prereleases)]()
-[![webman-event](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
-[![webman-event](https://img.shields.io/github/last-commit/tinywan/webman-event/main)]()
-[![webman-event](https://img.shields.io/github/v/tag/tinywan/webman-event?color=ff69b4)]()
-
+[![Latest Stable Version](http://poser.pugx.org/tinywan/event/v)](https://packagist.org/packages/tinywan/event) 
+[![Total Downloads](http://poser.pugx.org/tinywan/event/downloads)](https://packagist.org/packages/tinywan/event) 
+[![Latest Unstable Version](http://poser.pugx.org/tinywan/event/v/unstable)](https://packagist.org/packages/tinywan/event) 
+[![License](http://poser.pugx.org/tinywan/event/license)](https://packagist.org/packages/tinywan/event) 
+[![PHP Version Require](http://poser.pugx.org/tinywan/event/require/php)](https://packagist.org/packages/tinywan/event)
 事件相比较中间件的优势是事件比中间件更加精准定位（或者说粒度更细），并且更适合一些业务场景的扩展。例如，我们通常会遇到用户注册或者登录后需要做一系列操作，通过事件系统可以做到不侵入原有代码完成登录的操作扩展，降低系统的耦合性的同时，也降低了BUG的可能性。
 
 ## 安装
