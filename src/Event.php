@@ -65,12 +65,12 @@ class Event implements Bootstrap
 
     /**
      * 触发事件
-     * @param Event $event
+     * @param SymfonyEvent $event
      * @param string|null $eventName
      */
-    public static function trigger(Event $event, string $eventName = null)
+    public static function trigger(SymfonyEvent $event, string $eventName = null)
     {
-        static::$instance->dispatch($event,$eventName);
+        static::$instance->dispatch($event, $eventName);
     }
 
     /**

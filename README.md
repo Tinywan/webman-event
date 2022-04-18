@@ -1,7 +1,6 @@
 # webman-event
 
 [![license](https://img.shields.io/github/license/Tinywan/webman-event)]()
-[![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
 [![Build status](https://github.com/Tinywan/dnmp/workflows/CI/badge.svg)]()
 [![webman-event](https://img.shields.io/github/v/release/tinywan/webman-event?include_prereleases)]()
 [![webman-event](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
@@ -15,6 +14,7 @@
 ```shell script
 composer require tinywan/event
 ```
+
 ## 快速开始
 
 ### 监听事件
@@ -22,7 +22,7 @@ composer require tinywan/event
 事件类 `LogErrorWriteEvent.php`
 
 ```php
-namespace extend\event;
+namespace extend;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -30,8 +30,7 @@ class LogErrorWriteEvent extends Event
 {
     const NAME = 'log.error.write';  // 事件名，事件的唯一标识
 
-    /** @var array */
-    public array $log;
+    public $log;
 
     public function __construct(array $log)
     {
@@ -46,11 +45,12 @@ class LogErrorWriteEvent extends Event
 ```
 
 事件监听
+
 ```php
 return [
     // 事件监听
     'listener'    => [
-        \extend\event\LogErrorWriteEvent::NAME  => \extend\event\LogErrorWriteEvent::class,
+        \extend\LogErrorWriteEvent::NAME => \extend\LogErrorWriteEvent::class,
     ],
 ];
 ```
@@ -60,29 +60,24 @@ return [
 订阅类 `LoggerSubscriber.php`
 
 ```php
-namespace extend\event\subscriber;
+namespace extend;
 
-use extend\event\LogErrorWriteEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class LoggerSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @desc: 方法描述
-     * @return array|string[]
-     */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
-            LogErrorWriteEvent::NAME => 'onLogErrorWrite',
+            \extend\LogErrorWriteEvent::NAME => 'onLogErrorWrite',
         ];
     }
 
     /**
      * @desc: 触发事件
-     * @param LogErrorWriteEvent $event
+     * @param \extend\LogErrorWriteEvent $event
      */
-    public function onLogErrorWrite(LogErrorWriteEvent $event)
+    public function onLogErrorWrite(\extend\LogErrorWriteEvent $event)
     {
         // 一些具体的业务逻辑
         var_dump($event->handle());
@@ -95,7 +90,7 @@ class LoggerSubscriber implements EventSubscriberInterface
 return [
     // 事件订阅
     'subscriber' => [
-        \extend\event\subscriber\LoggerSubscriber::class,
+         \extend\LoggerSubscriber::class
     ],
 ];
 ```
@@ -109,7 +104,17 @@ $error = [
     'errorMessage' => '错误消息',
     'errorCode' => 500
 ];
-EventManager::trigger(new LogErrorWriteEvent($error),LogErrorWriteEvent::NAME);
+Tinywan\Event::trigger(new \extend\LogErrorWriteEvent($error), \extend\LogErrorWriteEvent::NAME);
+```
+
+### 助手函数（推荐）
+
+```php
+$error = [
+    'errorMessage' => '错误消息',
+    'errorCode' => 500
+];
+event(new \extend\LogErrorWriteEvent($error), \extend\LogErrorWriteEvent::NAME);
 ```
 
 执行结果
