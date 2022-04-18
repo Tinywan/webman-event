@@ -1,5 +1,6 @@
 <?php
-namespace Tinywan\Event;
+
+namespace Tinywan;
 
 class Install
 {
